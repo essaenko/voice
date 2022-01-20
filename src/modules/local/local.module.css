@@ -1,0 +1,13 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.clientList {
+  margin-top: 10px;
+  text-align: left;
+}
