@@ -7,7 +7,6 @@ enum RTCPeerTypeList {
 
 class RtcLib {
   public connection: RTCPeerConnection;
-  public channels: RTCDataChannel[] = [];
   public signaling: HostSignalingClient | PeerSignalingClient;
   public id: string;
 
@@ -33,29 +32,12 @@ class RtcLib {
   }
 
   private initConnectionEventHandlers = () => {
-    this.connection.addEventListener('datachannel', this.onDataChannel);
     this.connection.addEventListener('icecandidate', this.onIceCandidate);
   }
 
   private onIceCandidate = async (event: RTCPeerConnectionIceEvent) => {
     if (event.candidate) {
       this.signaling.sendRtcIceCandidate(this.id, event.candidate);
-    }
-  }
-
-  public createChannel = (name: string = 'default'): RTCDataChannel => {
-    if (this.channels.find((channel) => channel.label === name)) {
-      throw new Error(`Channel with label ${name} already exists`)
-    }
-    const channel = this.connection.createDataChannel(name);
-    this.channels.push(channel);
-
-    return channel;
-  }
-
-  public onDataChannel = (event: RTCDataChannelEvent) => {
-    if (this.peerType === RTCPeerTypeList.Remote) {
-      this.channels.push(event.channel);
     }
   }
 
