@@ -7,6 +7,15 @@
   text-align: center;
 }
 
+h2, h3 {
+  margin: 0;
+  padding: 10px 0;
+}
+
+progress {
+  margin-left: 10px;
+}
+
 .clientList {
   margin-top: 10px;
   text-align: left;
