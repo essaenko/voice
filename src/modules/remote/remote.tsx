@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useParams} from "react-router";
 
 import {PeerSignalingClient} from "../../lib/socket.lib";
@@ -6,7 +6,7 @@ import {PeerSignalingClient} from "../../lib/socket.lib";
 import css from './remote.module.css';
 import {Settings} from "../common/settings";
 
-export const RemoteConnection = (props: any): JSX.Element => {
+export const RemoteConnection = (): JSX.Element => {
   const params = useParams<{ id: string }>();
   const [client, setClient] = useState<PeerSignalingClient>();
   const [devices, setDevices] = useState<MediaDeviceInfo[] | null>(null);
@@ -31,7 +31,7 @@ export const RemoteConnection = (props: any): JSX.Element => {
     }
   }, [])
 
-  useEffect(() => {
+  const onClick = useCallback(() => {
     if (params.id) {
       setClient(new PeerSignalingClient(params.id))
     }
@@ -40,15 +40,26 @@ export const RemoteConnection = (props: any): JSX.Element => {
   useEffect(() => {
     if (client) {
       client.registerClient();
-      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-        setStream(stream)
-      });
+      if (navigator.mediaDevices) {
+        navigator
+          .mediaDevices
+          .getUserMedia({ audio: true }).then((stream) => {
+          setStream(stream)
+        }).catch((e) => {
+          console.warn(`Can't set stream with error: `, e);
+        });
+      }
     }
   }, [client])
 
   return (
     <div className={css.root}>
       Your id: {params.id}
+      <br/>
+      <br/>
+      <button onClick={onClick}>
+        Join voice chat
+      </button>
       <Settings
         mic={mic}
         setMic={setMic}

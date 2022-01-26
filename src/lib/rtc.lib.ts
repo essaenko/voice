@@ -183,7 +183,7 @@ export class RTCRemotePeer extends RtcLib {
   private onTrack = (event: RTCTrackEvent) => {
     const audio = new Audio();
     audio.srcObject = event.streams[0];
-    audio.play()
+    audio.play();
   }
 
   public addIceCandidate = async (candidate: RTCIceCandidateInit) => {
